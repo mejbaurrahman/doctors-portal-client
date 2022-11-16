@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../../../Context/AuthProvider/AuthProvider'
 import PrimaryButton from '../Button/PrimaryButton'
 
 export default function Navigation() {
+
+  const {user, logOut} = useContext(AuthContext);
   return (
     <div className=''>
         <div className="navbar bg-base-100">
@@ -15,8 +18,13 @@ export default function Navigation() {
         <li><Link to='/'>Home</Link></li>
         <li><Link to='/about'>About</Link></li>
         <li><Link to='/appointment'>Appointment</Link></li>
-        <li><Link to='/login'>Login</Link></li>
-        <li><Link to='/register'>Register</Link></li>
+        {
+          user?.uid ? <>
+          <li>{user?.displayName}</li>
+          <button className='btn btn-ghost' onClick={logOut}>Logout</button>
+          </>: <li><Link to='/login'>Login</Link></li>
+        }
+        
       </ul>
     </div>
     <a className="btn btn-ghost normal-case text-xl">Doctors Portal</a>
@@ -26,8 +34,12 @@ export default function Navigation() {
     <li><Link to='/'>Home</Link></li>
     <li><Link to='/about'>About</Link></li>
         <li><Link to='/appointment'>Appointment</Link></li>
-        <li><Link to='/login'>Login</Link></li>
-        <li><Link to='/register'>Register</Link></li>
+        {
+          user?.uid ? <>
+          <li>{user?.displayName}</li>
+          <button className='btn btn-ghost' onClick={logOut}>Logout</button>
+          </>: <li><Link to='/login'>Login</Link></li>
+        }
     </ul>
   </div>
 </div>

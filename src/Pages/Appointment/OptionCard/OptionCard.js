@@ -11,7 +11,11 @@ export default function OptionCard({option, selectedDate, setSelectedOption}) {
     <p className='text-center'>{slots.length >1 ? slots[0]: 'No Slots' }</p>
     <p className='text-center'>{slots.length} {slots.length > 1? 'spaces': 'space'}  available </p>
     <div className='flex justify-center'>
-    <label htmlFor="booking-modal" onClick={()=>setSelectedOption(option)} className="btn btn-primary text-white w-1/2">Buy Now</label>
+    <label
+    disabled = {slots.length === 0}
+    htmlFor="booking-modal"
+     onClick={()=>setSelectedOption(option)}
+      className="btn btn-primary text-white w-1/2">Book Now</label>
     </div>
     </div>
   </div>

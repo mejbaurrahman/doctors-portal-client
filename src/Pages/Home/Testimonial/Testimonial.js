@@ -46,7 +46,7 @@ export default function Testimonial() {
         <div className='grid lg:grid-cols-3 grid-cols-1 gap-4'>
               {
                 reviews.map(r=><Review
-                key={r.id}
+                key={r._id}
                 r={r}
                 >
 
