@@ -1,8 +1,11 @@
+import axios from 'axios';
 import { format } from 'date-fns';
-import React from 'react'
+import React, { useContext } from 'react'
+import toast from 'react-hot-toast';
+import { AuthContext } from '../../../Context/AuthProvider/AuthProvider';
 
 export default function BookingModal({selectedOption, selectedDate, setSelectedOption}) {
-
+  const {user} = useContext(AuthContext);
   const {_id, name, slots} = selectedOption;
   const date = format(selectedDate, "PP");
 
@@ -22,9 +25,20 @@ export default function BookingModal({selectedOption, selectedDate, setSelectedO
           patientEmail,
           patientPhone
         };
-
-        console.log(bookingInfo)
-        setSelectedOption(null);
+        axios({
+          method:'POST',
+          url: `http://localhost:5000/appoinments`,
+          data: bookingInfo
+        }).then(data=>{
+          console.log(data)
+          toast.success('Booked Successfully');
+          setSelectedOption(null);
+        }).catch(error=>{
+          console.log(error.message)
+        })
+        
+        // console.log(bookingInfo)
+        
   }
   return (
 <div>
@@ -46,9 +60,9 @@ export default function BookingModal({selectedOption, selectedDate, setSelectedO
         </select>
         
         <br /> <br />
-        <input type="text" placeholder='name' name='name'  className='w-full px-5 py-3 border border-1   rounded ' /> <br /> <br />
+        <input type="text" placeholder='name' name='name' defaultValue={user?.displayName}  disabled={user?.displayName}  className='w-full px-5 py-3 border border-1   rounded ' /> <br /> <br />
         <input type="text" placeholder='phone' name='phone'  className='w-full px-5 py-3 border border-1 rounded '  /> <br /> <br />
-        <input type="email" placeholder='Email' name='email' className='w-full px-5 py-3 border border-1 rounded '  /> <br /> <br />
+        <input type="email" placeholder='Email' name='email' defaultValue={user?.email} disabled={user?.email} className='w-full px-5 py-3 border border-1 rounded '  /> <br /> <br />
         <button type="submit" className='btn btn-dark w-full'>Submit</button>
       </form>
     </div>

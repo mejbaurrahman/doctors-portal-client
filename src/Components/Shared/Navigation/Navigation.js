@@ -5,7 +5,7 @@ import PrimaryButton from '../Button/PrimaryButton'
 
 export default function Navigation() {
 
-  const {user, logOut} = useContext(AuthContext);
+  const {user,loading, logOut} = useContext(AuthContext);
   return (
     <div className=''>
         <div className="navbar bg-base-100">
@@ -19,8 +19,9 @@ export default function Navigation() {
         <li><Link to='/about'>About</Link></li>
         <li><Link to='/appointment'>Appointment</Link></li>
         {
-          user?.uid ? <>
-          <li>{user?.displayName}</li>
+          !loading && user?.uid ? <>
+          {/* <li>{user?.displayName}</li> */}
+          <li><Link to='/dashbord'>Dashbord</Link></li>
           <button className='btn btn-ghost' onClick={logOut}>Logout</button>
           </>: <li><Link to='/login'>Login</Link></li>
         }
@@ -35,8 +36,9 @@ export default function Navigation() {
     <li><Link to='/about'>About</Link></li>
         <li><Link to='/appointment'>Appointment</Link></li>
         {
-          user?.uid ? <>
-          <li>{user?.displayName}</li>
+          !loading && user?.uid ? <>
+          {/* <li>{user?.displayName}</li> */}
+          <li><Link to='/dashbord'>Dashbord</Link></li>
           <button className='btn btn-ghost' onClick={logOut}>Logout</button>
           </>: <li><Link to='/login'>Login</Link></li>
         }

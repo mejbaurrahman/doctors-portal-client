@@ -1,7 +1,7 @@
 import { updateCurrentUser } from 'firebase/auth';
 import React, { useContext } from 'react';
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../Context/AuthProvider/AuthProvider';
 
 export default function Registration() {
@@ -9,22 +9,33 @@ export default function Registration() {
   const {
     createUser, 
     user, 
+    setUser,
     loading,
+    setLoading,
     updateUser
   } = useContext(AuthContext);
 
+  const navigate = useNavigate();
+
   const handleSignUp = data => {
     console.log(data);
+    
     createUser(data.email, data.password)
     .then(result=>{
       const user = result.user;
-      console.log(user);
+      // console.log(user);
       const userInfo ={
         displayName: data.name
       };
+      setLoading(true)
       updateUser(userInfo)
       .then(result=>{
-        console.log(result.user);
+        setUser(user);
+        setLoading(false);
+        navigate('/');
+        console.log(user)
+        
+      
       })
       .catch((error)=>{
         console.log(error.message)
@@ -37,22 +48,22 @@ export default function Registration() {
       <div className='lg:w-1/3 w-full p-10 border border-1'>
         <h1 className='text-center text-xl mb-5 font-semibold'>Sign Up</h1>
       <form onSubmit={handleSubmit(handleSignUp)}>
-      <div className="form-control w-full max-w-xs">
+      <div className="form-control w-full ">
       <label className="label"> <span className="label-text">Name</span></label>
         <input type="text" 
         {...register("name", { required: "Name is required" })}
         placeholder="name" 
-        className="input input-bordered w-full max-w-xs" />
+        className="input input-bordered w-full " />
        
     </div>
     {errors.name?.type === 'required' && <p className='text-rose-800' role="alert">Name is required</p>} 
       
-      <div className="form-control w-full max-w-xs">
+      <div className="form-control w-full ">
       <label className="label"> <span className="label-text">Email</span></label>
         <input type="email" 
         {...register("email", { required: "Email is required" })}
         placeholder="Email" 
-        className="input input-bordered w-full max-w-xs" />
+        className="input input-bordered w-full" />
        
     </div>
     {errors.email?.type === 'required' && <p className='text-rose-800' role="alert">Email is required</p>} 

@@ -1,15 +1,24 @@
 import { format } from 'date-fns'
 import React, { useEffect, useState } from 'react'
 import OptionCard from '../OptionCard/OptionCard';
+import {
+    useQuery
+  } from '@tanstack/react-query'
 
 export default function AvailableAppointment({selectedDate, setSelectedOption}) {
-    const [availableOptions, setAvailableOptions] = useState([]);
+    // const [availableOptions, setAvailableOptions] = useState([]);
 
-    useEffect(()=>{
-        fetch('./appointmentOptions.json')
+    const {data:availableOptions=[]} = useQuery({queryKey:['availableOptions'],
+        queryFn:()=> fetch('http://localhost:5000/options')
         .then(res=>res.json())
-        .then(data=>setAvailableOptions(data))
-    }, [])
+        
+}) 
+
+    // useEffect(()=>{
+    //     fetch('http://localhost:5000/options')
+    //     .then(res=>res.json())
+    //     .then(data=>setAvailableOptions(data))
+    // }, [])
   return (
     <div className='my-16'>
         <p className='text-primary font-bold text-xl text-center'>Available appointment on: {format(selectedDate, 'PP')}</p>

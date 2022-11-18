@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 const auth = getAuth(app);
 export default function AuthProvider({children}) {
     
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [user, setUser]= useState(null);
 
     const googleProvider = new GoogleAuthProvider();
@@ -43,9 +43,12 @@ export default function AuthProvider({children}) {
     const authInfo ={
         createUser,
         user,
+        setLoading,
         loading,
+        googleLogin,
         login,
-        logOut, updateUser
+        logOut, updateUser,
+        setUser
     };
     return (
     <AuthContext.Provider value={authInfo}>
