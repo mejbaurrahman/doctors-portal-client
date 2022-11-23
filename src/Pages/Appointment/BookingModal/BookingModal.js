@@ -4,7 +4,7 @@ import React, { useContext } from 'react'
 import toast from 'react-hot-toast';
 import { AuthContext } from '../../../Context/AuthProvider/AuthProvider';
 
-export default function BookingModal({selectedOption, selectedDate, setSelectedOption}) {
+export default function BookingModal({selectedOption, selectedDate, refetch,setSelectedOption}) {
   const {user} = useContext(AuthContext);
   const {_id, name, slots} = selectedOption;
   const date = format(selectedDate, "PP");
@@ -30,9 +30,17 @@ export default function BookingModal({selectedOption, selectedDate, setSelectedO
           url: `http://localhost:5000/appoinments`,
           data: bookingInfo
         }).then(data=>{
-          console.log(data)
+          // console.log(data.data.acknowledged);
+         if(data.data.acknowledged){
           toast.success('Booked Successfully');
+          refetch();
           setSelectedOption(null);
+         }else{
+          toast.error(data.data.message);
+          setSelectedOption(null);
+
+         }
+         
         }).catch(error=>{
           console.log(error.message)
         })

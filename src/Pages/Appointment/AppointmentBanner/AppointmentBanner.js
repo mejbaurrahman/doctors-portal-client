@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import chair from '../../../assets/images/chair.png'; 
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
-
+import { enUS } from "date-fns/locale";
 export default function AppointmentBanner({selectedDate, setSelectedDate}) {
 
   return (
@@ -13,7 +13,11 @@ export default function AppointmentBanner({selectedDate, setSelectedDate}) {
     <div className='lg:w-1/2 w-full p-10 flex justify-center'>
       <DayPicker
       selected={selectedDate}
-      onSelect={setSelectedDate}
+      onSelect={(selectedDate) => {
+        if (selectedDate) {
+        setSelectedDate(selectedDate)
+        }
+        }}
       mode='single'
       ></DayPicker>
     </div>

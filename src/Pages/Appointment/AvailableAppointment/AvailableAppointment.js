@@ -4,15 +4,21 @@ import OptionCard from '../OptionCard/OptionCard';
 import {
     useQuery
   } from '@tanstack/react-query'
+import { data } from 'autoprefixer';
+import BookingModal from '../BookingModal/BookingModal';
 
-export default function AvailableAppointment({selectedDate, setSelectedOption}) {
+export default function AvailableAppointment({selectedDate, selectedOption, setSelectedOption}) {
     // const [availableOptions, setAvailableOptions] = useState([]);
-
-    const {data:availableOptions=[]} = useQuery({queryKey:['availableOptions'],
-        queryFn:()=> fetch('http://localhost:5000/options')
+    const date = format(selectedDate, 'PP');
+    const {data:availableOptions=[], refetch, isLoading} = useQuery({queryKey:['availableOptions', date],
+        queryFn:()=> fetch(`http://localhost:5000/options?date=${date}`)
         .then(res=>res.json())
         
-}) 
+    }) 
+
+    if(isLoading){
+      return <div>Loading................</div>
+    }
 
     // useEffect(()=>{
     //     fetch('http://localhost:5000/options')
@@ -33,6 +39,12 @@ export default function AvailableAppointment({selectedDate, setSelectedOption}) 
             }
 
         </div>
+        {selectedOption&& <BookingModal
+         selectedOption={selectedOption} 
+         setSelectedOption={setSelectedOption} 
+         selectedDate={selectedDate}
+         refetch={refetch}
+         ></BookingModal>}
     </div>
   )
 }

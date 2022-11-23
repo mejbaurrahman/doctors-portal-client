@@ -1,21 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../Context/AuthProvider/AuthProvider';
+import useToken from '../../../Hooks/useToken/useToken';
 
 export default function Login() {
   const { register,formState: { errors }, handleSubmit } = useForm();
   const {user, login, loading, googleLogin} = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
+  const [loginEmail, setLoginEmail] = useState('');
+  const [token] = useToken(loginEmail);
   let from = location.state?.from?.pathname || "/";
+
+  if(token){
+    navigate(from, {replace:true})
+  }
   const handleLogin = data => {
-    console.log(data);
+    // console.log(data);
     login(data.email, data.password)
     .then(result=>{
       const user = result.user;
-      console.log(user)
-      navigate(from, {replace:true})
+      // console.log(user)
+      setLoginEmail(data.email);
+      
     }).catch((error)=>{
       console.log(error.message)
     })
@@ -23,17 +31,18 @@ export default function Login() {
 
   }
 
-  const handleGoogleLogin =()=>{
-        googleLogin()
-        .then(result=>{
-          const user = result.user;
-          console.log(user)
-          navigate(from, {replace:true})
-        }).catch((error)=>{
-          console.log(error.message)
-        })
+  // const handleGoogleLogin =()=>{
+  //       googleLogin()
+  //       .then(result=>{
+  //         const user = result.user;
+  //         console.log(user)
+  //         navigate(from, {replace:true})
+  //         // setLoginEmail(user?.email)
+  //       }).catch((error)=>{
+  //         console.log(error.message)
+  //       })
     
-  }
+  // }
 
   return (
     <div className='flex justify-center items-center my-16'>
@@ -68,10 +77,10 @@ export default function Login() {
       </form>
 
       <p>New to doctor portal <Link to='/register' className='text-primary'>Create New Account</Link></p>
-      <div className="divider">OR</div>
-      <div className='flex justify-center'>
+      {/* <div className="divider">OR</div> */}
+      {/* <div className='flex justify-center'>
       <button className='btn btn-accent btn-outline' onClick={handleGoogleLogin} >Continue with Google</button>
-      </div>
+      </div> */}
       </div>
     </div>
   )

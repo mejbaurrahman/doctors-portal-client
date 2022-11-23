@@ -1,8 +1,10 @@
 import { updateCurrentUser } from 'firebase/auth';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from "react-hook-form";
+import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../Context/AuthProvider/AuthProvider';
+import useToken from '../../../Hooks/useToken/useToken';
 
 export default function Registration() {
   const { register,formState: { errors }, handleSubmit } = useForm();
@@ -14,9 +16,13 @@ export default function Registration() {
     setLoading,
     updateUser
   } = useContext(AuthContext);
-
+  const [createdEmail, setCreatedEmail] = useState('');
+  const [token] = useToken(createdEmail);
   const navigate = useNavigate();
 
+  if(token){
+    navigate('/');
+  }
   const handleSignUp = data => {
     console.log(data);
     
@@ -30,19 +36,38 @@ export default function Registration() {
       setLoading(true)
       updateUser(userInfo)
       .then(result=>{
-        setUser(user);
+        // setUser(user);
+        saveUser(data.name, data.email)
         setLoading(false);
-        navigate('/');
-        console.log(user)
+        // navigate('/');
         
-      
+        // console.log(user)
       })
       .catch((error)=>{
         console.log(error.message)
       })
     })
 
-  };
+  }
+
+  const saveUser =(name, email)=>{
+    const user = {name, email};
+    fetch(`http://localhost:5000/users`,{
+      method:'POST',
+      headers:{
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(user)
+    })
+    .then(res=>res.json())
+    .then(data=>{
+      // console.log(data);
+      toast.success('Saved in database succesfully')
+      setCreatedEmail(email)
+    }).catch(error=>console.log(error.message))
+  }
+
+  
   return (
     <div className='flex justify-center items-center my-16'>
       <div className='lg:w-1/3 w-full p-10 border border-1'>

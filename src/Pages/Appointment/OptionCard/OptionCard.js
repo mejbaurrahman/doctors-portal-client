@@ -3,7 +3,7 @@ import React from 'react'
 import PrimaryButton from '../../../Components/Shared/Button/PrimaryButton';
 
 export default function OptionCard({option, selectedDate, setSelectedOption}) {
-    const {name, slots} = option;
+  const {name, slots} = option;
   return (
     <div className="card shadow-xl">
   <div className="card-body">
